@@ -1,0 +1,6 @@
+<DbConfig>
+	<configNode name="address" value="37.228.151.155"/>
+	<configNode name="port" value="5432"/>
+	<configNode name="user" value="postgres"/>
+	<configNode name="pw" value="TheGoldenHall1"/>
+</DbConfig>

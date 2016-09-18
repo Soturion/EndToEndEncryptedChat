@@ -1,0 +1,49 @@
+C:\Users\droephil.CONNECT\documents\visual studio 2012\Projects\chatServer\chatServer\bin\Debug\chatServer.exe
+C:\Users\droephil.CONNECT\documents\visual studio 2012\Projects\chatServer\chatServer\bin\Debug\chatServer.pdb
+C:\Users\droephil.CONNECT\documents\visual studio 2012\Projects\chatServer\chatServer\obj\Debug\chatServer.exe
+C:\Users\droephil.CONNECT\documents\visual studio 2012\Projects\chatServer\chatServer\obj\Debug\chatServer.pdb
+C:\Users\droephil.CONNECT\documents\visual studio 2012\Projects\chatServer\chatServer\obj\Debug\chatServer.csprojResolveAssemblyReference.cache
+C:\Users\Eispala\Documents\Visual Studio 2015\Projects\chatServer\chatServer\obj\Debug\chatServer.exe
+C:\Users\Eispala\Documents\Visual Studio 2015\Projects\chatServer\chatServer\obj\Debug\chatServer.pdb
+C:\Users\Eispala\Documents\Visual Studio 2015\Projects\chatServer\chatServer\bin\Debug\chatServer.exe
+C:\Users\Eispala\Documents\Visual Studio 2015\Projects\chatServer\chatServer\bin\Debug\chatServer.pdb
+C:\Users\Eispala\Documents\Visual Studio 2015\Projects\chatServer\chatServer\obj\Debug\chatServer.csprojResolveAssemblyReference.cache
+C:\Users\droephil.CONNECT\Documents\Visual Studio 2012\Projects\chatServer\chatServer\bin\Debug\chatServer.exe.config
+C:\Users\droephil.CONNECT\Documents\Visual Studio 2012\Projects\chatServer\chatServer\bin\Debug\Npgsql.dll
+C:\Users\droephil.CONNECT\Documents\Visual Studio 2012\Projects\chatServer\chatServer\bin\Debug\Npgsql.xml
+C:\Users\Eispala\Documents\Visual Studio 2015\Projects\chatServer\chatServer\bin\Debug\chatServer.exe.config
+C:\Users\Eispala\Documents\Visual Studio 2015\Projects\chatServer\chatServer\bin\Debug\Npgsql.xml
+C:\Users\droephil.CONNECT\Documents\Visual Studio 2012\Test\chatServer\chatServer\bin\Debug\chatServer.exe.config
+C:\Users\droephil.CONNECT\Documents\Visual Studio 2012\Test\chatServer\chatServer\obj\Debug\chatServer.exe
+C:\Users\droephil.CONNECT\Documents\Visual Studio 2012\Test\chatServer\chatServer\obj\Debug\chatServer.pdb
+C:\Users\droephil.CONNECT\Documents\Visual Studio 2012\Test\chatServer\chatServer\bin\Debug\chatServer.exe
+C:\Users\droephil.CONNECT\Documents\Visual Studio 2012\Test\chatServer\chatServer\bin\Debug\chatServer.pdb
+C:\Users\droephil.CONNECT\Documents\Visual Studio 2012\Test\chatServer\chatServer\bin\Debug\Npgsql.xml
+C:\Users\droephil.CONNECT\Documents\Visual Studio 2012\Test\chatServer\chatServer\obj\Debug\chatServer.csprojResolveAssemblyReference.cache
+C:\Users\droephil.CONNECT\Documents\GitTest2\chatServer\chatServer\bin\Debug\chatServer.exe.config
+C:\Users\droephil.CONNECT\Documents\GitTest2\chatServer\chatServer\obj\Debug\chatServer.exe
+C:\Users\droephil.CONNECT\Documents\GitTest2\chatServer\chatServer\obj\Debug\chatServer.pdb
+C:\Users\droephil.CONNECT\Documents\GitTest2\chatServer\chatServer\obj\Debug\chatServer.csprojResolveAssemblyReference.cache
+C:\Users\droephil.CONNECT\Documents\GitTest2\chatServer\chatServer\bin\Debug\chatServer.exe
+C:\Users\droephil.CONNECT\Documents\GitTest2\chatServer\chatServer\bin\Debug\chatServer.pdb
+C:\Users\droephil.CONNECT\Documents\GitTest2\chatServer\chatServer\bin\Debug\Npgsql.xml
+C:\Users\droephil.CONNECT\Documents\GitTest2\chatServer\chatServer\bin\Debug\Newtonsoft.Json.pdb
+C:\Users\droephil.CONNECT\Documents\GitTest2\chatServer\chatServer\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Eispala\Documents\GitHub\RoomedChatServer\RoomedChatServer\chatServer\chatServer\bin\Debug\chatServer.exe.config
+C:\Users\Eispala\Documents\GitHub\RoomedChatServer\RoomedChatServer\chatServer\chatServer\obj\Debug\chatServer.exe
+C:\Users\Eispala\Documents\GitHub\RoomedChatServer\RoomedChatServer\chatServer\chatServer\obj\Debug\chatServer.pdb
+C:\Users\Eispala\Documents\GitHub\RoomedChatServer\RoomedChatServer\chatServer\chatServer\obj\Debug\chatServer.csprojResolveAssemblyReference.cache
+C:\Users\Eispala\Documents\GitHub\RoomedChatServer\RoomedChatServer\chatServer\chatServer\bin\Debug\chatServer.exe
+C:\Users\Eispala\Documents\GitHub\RoomedChatServer\RoomedChatServer\chatServer\chatServer\bin\Debug\chatServer.pdb
+C:\Users\Eispala\Documents\GitHub\RoomedChatServer\RoomedChatServer\chatServer\chatServer\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Eispala\Documents\GitHub\RoomedChatServer\RoomedChatServer\chatServer\chatServer\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Eispala\Documents\GitHub\RoomedChatServer\RoomedChatServer\chatServer\chatServer\bin\Debug\Npgsql.xml
+C:\Users\Eispala\Desktop\EndToEndEncryptedChat\chatServer\chatServer\bin\Debug\chatServer.exe.config
+C:\Users\Eispala\Desktop\EndToEndEncryptedChat\chatServer\chatServer\obj\Debug\chatServer.exe
+C:\Users\Eispala\Desktop\EndToEndEncryptedChat\chatServer\chatServer\obj\Debug\chatServer.pdb
+C:\Users\Eispala\Desktop\EndToEndEncryptedChat\chatServer\chatServer\obj\Debug\chatServer.csprojResolveAssemblyReference.cache
+C:\Users\Eispala\Desktop\EndToEndEncryptedChat\chatServer\chatServer\bin\Debug\chatServer.exe
+C:\Users\Eispala\Desktop\EndToEndEncryptedChat\chatServer\chatServer\bin\Debug\chatServer.pdb
+C:\Users\Eispala\Desktop\EndToEndEncryptedChat\chatServer\chatServer\bin\Debug\Newtonsoft.Json.pdb
+C:\Users\Eispala\Desktop\EndToEndEncryptedChat\chatServer\chatServer\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Eispala\Desktop\EndToEndEncryptedChat\chatServer\chatServer\bin\Debug\Npgsql.xml
