@@ -55,6 +55,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="JsonClasses\createUserJson.cs" />
+    <Compile Include="JsonClasses\createUserReturnJson.cs" />
     <Compile Include="JsonClasses\sessionSeedJson.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

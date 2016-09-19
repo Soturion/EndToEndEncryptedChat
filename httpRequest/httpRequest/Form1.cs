@@ -59,9 +59,9 @@ namespace httpRequest
                 generateSessionSeedRequest.ContentType = "[serverCommand]createSessionSeed";
                 generateSessionSeedRequest.ContentLength = getSessionSeedBuffer.Length;
 
-                Stream sessionSeedStream = generateSessionSeedRequest.GetRequestStream();
-                sessionSeedStream.Write(getSessionSeedBuffer, 0, getSessionSeedBuffer.Length);
-                sessionSeedStream.Close();
+                Stream sessionSeedReturn = generateSessionSeedRequest.GetRequestStream();
+                sessionSeedReturn.Write(getSessionSeedBuffer, 0, getSessionSeedBuffer.Length);
+                sessionSeedReturn.Close();
 
                 sSessionSeed = ((JsonClasses.sessionSeedJson)JsonConvert.DeserializeObject<JsonClasses.sessionSeedJson>(await getResponseString(generateSessionSeedRequest))).SessionSeed;
                 listBox1.Items.Add("Created session seed: " + sSessionSeed);
@@ -77,6 +77,8 @@ namespace httpRequest
             Stream dataStream = requ.GetRequestStream();
             dataStream.Write(sendServerCommand, 0, sendServerCommand.Length);
             dataStream.Close();
+
+            int iCreateResult = ((JsonClasses.createUserReturnJson)JsonConvert.DeserializeObject<JsonClasses.createUserReturnJson>(await getResponseString(requ))).UserReturn;
 
         }
 

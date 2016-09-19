@@ -32,19 +32,16 @@ namespace chatServer
         HttpListenerResponse response;
         string smessage;
         string sClassToCreate;
+        bool bWaitForEvent = false;
 
         private async Task HandleRequestAsync(HttpListenerContext context)
         {
-
-            // Do processing here, possibly affecting KeepGoing to make the 
-            // server shut down.
+            bWaitForEvent = false;
             byte[] bInput = new byte[context.Request.ContentLength64];
             context.Request.InputStream.Read(bInput, 0, bInput.Length);
             smessage = Encoding.UTF8.GetString(bInput, 0, bInput.Length);
-            //await Task.Delay(1000);
 
             if (!context.Request.ContentType.StartsWith("[serverCommand]")) { return; }
-            //sClassToCreate = context.Request.ContentType.Replace("[serverCommand]", "");
 
 
             dynamic clientMessage = JsonConvert.DeserializeObject(smessage);
@@ -59,26 +56,40 @@ namespace chatServer
                     break;
 
                 case httpServerCommands.createUser:
-                    //JsonClasses.createUserJson newUser = JsonConvert.DeserializeObject<JsonClasses.createUserJson>()
                     JsonClasses.createUserJson newUser = ((JsonClasses.createUserJson)JsonConvert.DeserializeObject<JsonClasses.createUserJson>(smessage));
-                    dbHelper.queueCreateUser(newUser.NewUser.UserName, newUser.NewUser.PublicKey, DateTime.Now);
+                    dbAction test = dbHelper.queueCreateUser(newUser.NewUser.UserName, newUser.NewUser.PublicKey, DateTime.Now);
+                    test.HttpContext = context;
+                    test.onDbActionFinished += HttpClientHandler_onDbActionFinished;
+                    bWaitForEvent = true;
                     break;
             }
+
+            if(bWaitForEvent) { return; }
 
             response = context.Response;
             
             byte[] buffer = Encoding.UTF8.GetBytes(responseString);
 
-            // Get a response stream and write the response to it.
             response.ContentLength64 = buffer.Length;
             Stream output = response.OutputStream;
             output.Write(buffer, 0, buffer.Length);
 
-            // You must close the output stream.
             output.Close();
+        }
 
+        private void HttpClientHandler_onDbActionFinished(object sender, dbActionArgs e)
+        {
+            response = ((dbAction)sender).HttpContext.Response;
+               string responseString = @"{'UserReturn': '" + ((dbAction)sender).Status.ToString() + "'}";
+            
 
-            //Perform(context);
+            byte[] buffer = Encoding.UTF8.GetBytes(responseString);
+
+            response.ContentLength64 = buffer.Length;
+            Stream output = response.OutputStream;
+            output.Write(buffer, 0, buffer.Length);
+
+            output.Close();
         }
 
         private void Perform(HttpListenerContext ctx)

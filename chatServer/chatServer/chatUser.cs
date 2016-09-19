@@ -8,7 +8,7 @@ namespace chatServer
 {
     public class chatUser
     {
-        private room _roomOfUser;
+        //private room _roomOfUser;
         //private receivedCommand _receiveData;
         private TcpClient client;
         private NetworkStream netStream;
@@ -26,11 +26,11 @@ namespace chatServer
         //    set { _receiveData = value; }
         //}
 
-        public room RoomOfUser
-        {
-            get { return _roomOfUser; }
-            set { _roomOfUser = value; }
-        }
+        //public room RoomOfUser
+        //{
+        //    get { return _roomOfUser; }
+        //    set { _roomOfUser = value; }
+        //}
 
         //public chatUser(receivedCommand comm, room r, TcpClient tcp)
         //{

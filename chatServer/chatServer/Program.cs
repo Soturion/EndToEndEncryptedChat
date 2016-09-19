@@ -62,10 +62,10 @@ namespace chatServer
                     case "list rooms":
                         Console.WriteLine(":: Rooms:");
 
-                        foreach(room r in RoomHandler.Rooms)
-                        {
-                            Console.WriteLine(r.RoomName);
-                        }
+                        //foreach(room r in RoomHandler.Rooms)
+                        //{
+                        //    Console.WriteLine(r.RoomName);
+                        //}
                         break;
 
                     case "clear":
@@ -73,7 +73,7 @@ namespace chatServer
                         break;
                     case "remove room":
                         Console.WriteLine("Room to remove:");
-                        RoomHandler.removeRoom(Console.ReadLine());
+                        //RoomHandler.removeRoom(Console.ReadLine());
                         break;
                 }
             }
@@ -95,8 +95,7 @@ namespace chatServer
 
                 if (!loopedAct.Handeled & loopedAct.SqlAction == sqlAction.insert | loopedAct.SqlAction == sqlAction.deleteMessages)
                 {
-                    dbHelper.executeQueryWithoutReturn(loopedAct.Command);
-                    loopedAct.Handeled = true;
+                    dbHelper.executeQueryWithoutReturn(loopedAct);
                     dbHelper.bCleaningQueue = true;
                     dbHelper.lSqlCommands.RemoveAt(i);
                     dbHelper.bCleaningQueue = false;
