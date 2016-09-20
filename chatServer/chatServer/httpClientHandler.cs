@@ -80,7 +80,12 @@ namespace chatServer
         private void HttpClientHandler_onDbActionFinished(object sender, dbActionArgs e)
         {
             response = ((dbAction)sender).HttpContext.Response;
-               string responseString = @"{'UserReturn': '" + ((dbAction)sender).Status.ToString() + "'}";
+            string responseString = "";
+
+            if (((dbAction)sender).SqlAction == sqlAction.createUser)
+            {
+                responseString = @"{'UserReturn': '" + ((dbAction)sender).Status.ToString() + "'}";
+            }            
             
 
             byte[] buffer = Encoding.UTF8.GetBytes(responseString);
@@ -90,6 +95,7 @@ namespace chatServer
             output.Write(buffer, 0, buffer.Length);
 
             output.Close();
+            
         }
 
         private void Perform(HttpListenerContext ctx)

@@ -3322,6 +3322,14 @@
             via the standard CLR exceptions (e.g. ArgumentException).
             </remarks>
         </member>
+        <member name="P:Npgsql.NpgsqlException.BaseMessage">
+            <summary>
+            Same as <see cref="P:Npgsql.PostgresException.MessageText"/>, for backwards-compatibility with Npgsql 2.x and Hangfire.
+            </summary>
+            <remarks>
+            Until Hangfire fix themselves: https://github.com/frankhommers/Hangfire.PostgreSql/issues/33
+            </remarks>
+        </member>
         <member name="T:Npgsql.NpgsqlFactory">
             <summary>
             A factory to create instances of various Npgsql objects.
@@ -4251,11 +4259,6 @@
         <member name="P:Npgsql.PostgresException.Routine">
             <summary>
             The name of the source-code routine reporting the error.
-            </summary>
-        </member>
-        <member name="P:Npgsql.PostgresException.BaseMessage">
-            <summary>
-            Same as <see cref="P:Npgsql.PostgresException.MessageText"/>, for backwards-compatibility with Npgsql 2.x
             </summary>
         </member>
         <member name="P:Npgsql.PostgresException.Message">

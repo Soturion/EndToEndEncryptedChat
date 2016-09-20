@@ -47,3 +47,13 @@ C:\Users\Eispala\Desktop\EndToEndEncryptedChat\chatServer\chatServer\bin\Debug\c
 C:\Users\Eispala\Desktop\EndToEndEncryptedChat\chatServer\chatServer\bin\Debug\Newtonsoft.Json.pdb
 C:\Users\Eispala\Desktop\EndToEndEncryptedChat\chatServer\chatServer\bin\Debug\Newtonsoft.Json.xml
 C:\Users\Eispala\Desktop\EndToEndEncryptedChat\chatServer\chatServer\bin\Debug\Npgsql.xml
+C:\Users\droephil.CONNECT\Documents\ScSGit\chatServer\chatServer\bin\Debug\chatServer.exe.config
+C:\Users\droephil.CONNECT\Documents\ScSGit\chatServer\chatServer\bin\Debug\chatServer.exe
+C:\Users\droephil.CONNECT\Documents\ScSGit\chatServer\chatServer\bin\Debug\chatServer.pdb
+C:\Users\droephil.CONNECT\Documents\ScSGit\chatServer\chatServer\bin\Debug\Newtonsoft.Json.dll
+C:\Users\droephil.CONNECT\Documents\ScSGit\chatServer\chatServer\bin\Debug\Npgsql.dll
+C:\Users\droephil.CONNECT\Documents\ScSGit\chatServer\chatServer\bin\Debug\Newtonsoft.Json.xml
+C:\Users\droephil.CONNECT\Documents\ScSGit\chatServer\chatServer\bin\Debug\Npgsql.xml
+C:\Users\droephil.CONNECT\Documents\ScSGit\chatServer\chatServer\obj\Debug\chatServer.csprojResolveAssemblyReference.cache
+C:\Users\droephil.CONNECT\Documents\ScSGit\chatServer\chatServer\obj\Debug\chatServer.exe
+C:\Users\droephil.CONNECT\Documents\ScSGit\chatServer\chatServer\obj\Debug\chatServer.pdb
