@@ -16,31 +16,32 @@ namespace chatServer
         getMessages = 1,
         deleteMessages = 2,
         createUser = 3,
+        loginUser = 4,
     }
 
     public static class dbHelper
     {
         public static void prepareDBConnection()
         {
-            dataBaseHelper.getDbData();
+            dataBaseXmlHelper.getDbData();
             NpgsqlConnectionStringBuilder stringBuilder = new NpgsqlConnectionStringBuilder();
-            stringBuilder.Host = dataBaseHelper.sDbAddress;
-            stringBuilder.Port = dataBaseHelper.iDbPort;
-            stringBuilder.Username = dataBaseHelper.sDbUser;
-            stringBuilder.Password = dataBaseHelper.sDbPass;
+            stringBuilder.Host = dataBaseXmlHelper.sDbAddress;
+            stringBuilder.Port = dataBaseXmlHelper.iDbPort;
+            stringBuilder.Username = dataBaseXmlHelper.sDbUser;
+            stringBuilder.Password = dataBaseXmlHelper.sDbPass;
             stringBuilder.Database = "chat_db";
-            
+
             dbHelper.connection = new NpgsqlConnection(stringBuilder);
             dbHelper.connection.Open();
 
             Console.WriteLine("DB connection established");
-            
+
             prepareTables();
         }
 
         public static NpgsqlConnection connection;
 
-        private static NpgsqlCommand createChatTab;
+        private static NpgsqlCommand dbConnection;
         private static NpgsqlCommand createUserTab;
 
         public static bool bCleaningQueue = false;
@@ -48,12 +49,12 @@ namespace chatServer
 
         private static void prepareTables()
         {
-            createChatTab = new NpgsqlCommand(@"CREATE TABLE chat_tab (uname text, room text, counter SERIAL NOT NULL, message text, PRIMARY KEY(uname, room, counter));", dbHelper.connection);
-            createUserTab = new NpgsqlCommand(@"CREATE TABLE user_tab (uname text, publickey text, credat date, PRIMARY KEY(uname));", dbHelper.connection);
+            dbConnection = new NpgsqlCommand(@"CREATE TABLE chat_tab (uname text, room text, counter SERIAL NOT NULL, message text, PRIMARY KEY(uname, room, counter));", dbHelper.connection);
+            createUserTab = new NpgsqlCommand(@"CREATE TABLE user_tab (uname text, password text, publickey text, credat date, PRIMARY KEY(uname));", dbHelper.connection);
 
             try
             {
-                createChatTab.ExecuteNonQuery();
+                dbConnection.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
@@ -73,7 +74,7 @@ namespace chatServer
         public static void queueInsertMessage(string sUser, string sRoom, string sMessage)
         {
             dbAction act = new dbAction();
-            act.Command = @"INSERT INTO chat_tab (uname, room, message) VALUES('[uname]','[room]','[message]');".Replace("[uname]", sUser).Replace("[room]",sRoom).Replace("[message]", sMessage);
+            act.Command = @"INSERT INTO chat_tab (uname, room, message) VALUES('[uname]','[room]','[message]');".Replace("[uname]", sUser).Replace("[room]", sRoom).Replace("[message]", sMessage);
             act.SqlAction = sqlAction.insert;
             dbHelper.lSqlCommands.Add(act);
         }
@@ -88,27 +89,36 @@ namespace chatServer
             dbHelper.lSqlCommands.Add(act);
         }
 
-        public static dbAction queueCreateUser(string sUserName, string sPublicKey, DateTime credat)
+        public static dbAction queueCreateUser(string sUserName, string sPassword, string sPublicKey, DateTime credat)
         {
             dbAction act = new dbAction();
-            act.Command = @"INSERT INTO user_tab (uname, publickey, credat) VALUES('[uname]','[publickey]','[credat]');".Replace("[uname]", sUserName).Replace("[publickey]", sPublicKey).Replace("[credat]", credat.ToShortDateString());
+            act.Command = @"INSERT INTO user_tab (uname, password, publickey, credat) VALUES('[uname]', '[password]', '[publickey]','[credat]');".Replace("[password]", sPassword).Replace("[uname]", sUserName).Replace("[publickey]", sPublicKey).Replace("[credat]", credat.ToShortDateString());
             act.SqlAction = sqlAction.createUser;
+            dbHelper.lSqlCommands.Add(act);
+            return act;
+        }
+
+        public static dbAction queueLoginUser(string sUsername, string sPassword)
+        {
+            dbAction act = new dbAction();
+            act.Command = @"SELECT * FROM user_tab WHERE uname = '[uname]' AND password = '[password]';".Replace("[uname]", sUsername).Replace("[password]", sPassword);
+            act.SqlAction = sqlAction.loginUser;
             dbHelper.lSqlCommands.Add(act);
             return act;
         }
 
         public static void executeQueryWithoutReturn(dbAction action)
         {
-            if (createChatTab != null & connection != null)
+            if (dbConnection != null & connection != null)
             {
-                createChatTab.CommandText = action.Command;
+                dbConnection.CommandText = action.Command;
 
                 try
                 {
-                    int result =  createChatTab.ExecuteNonQuery();
-                    if(result > 0)
+                    string result = dbConnection.ExecuteScalar().ToString();
+                    if (result != "")
                     {
-                        action.Status = result;
+                        action.Status = 4;
                     }
 
                     action.Handeled = true;
@@ -116,15 +126,44 @@ namespace chatServer
                 }
                 catch (Exception ex)
                 {
-                    action.Status = -1;
+                    action.Status = -5;
                     action.Handeled = true;
                     Console.WriteLine("++ Query queue error: " + ex.Message);
                 }
-                
+
             }
 
             action.Status = -3;
         }
+
+        //public static void executeQueryWithReturn(dbAction action)
+        //{
+        //    if (dbConnection != null & connection != null)
+        //    {
+        //        dbConnection.CommandText = action.Command;
+
+        //        try
+        //        {
+        //            int result = dbConnection.ExecuteNonQuery();
+        //            if (result > 0)
+        //            {
+        //                action.Status = result;
+        //            }
+
+        //            action.Handeled = true;
+
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            action.Status = -1;
+        //            action.Handeled = true;
+        //            Console.WriteLine("++ Query queue error: " + ex.Message);
+        //        }
+
+        //    }
+
+        //    action.Status = -3;
+        //}
 
         private static void Action_onDbActionFinished(object sender, dbActionArgs e)
         {
@@ -132,39 +171,39 @@ namespace chatServer
         }
 
         private static NpgsqlDataReader getMessagesReader;
-        public static string executeGetMessages(string sQuery)
-        {
-            return "";
-            //if(command != null & connection != null)
-            //{
-            //    command.CommandText = sQuery;
-            //    try
-            //    {
-            //        getMessagesReader = command.ExecuteReader();
-            //        string sResult = Convert.ToInt32(serverCommands.getMessages).ToString() + ";";
-            //        object[] colResult = new object[4];
-            //        while(getMessagesReader.Read())
-            //        {
-            //            getMessagesReader.GetValues(colResult);
-            //            foreach(object s in colResult)
-            //            {
-            //                sResult += s + ";";
-            //            }
-            //            sResult += "|";
-            //        }
-            //        getMessagesReader.Close();
-                    
-            //        return sResult;
-            //    }
-            //    catch (Exception ex)
-            //    {
+        //public static string executeGetMessages(string sQuery)
+        //{
+        //    return "";
+        //    //if(command != null & connection != null)
+        //    //{
+        //    //    command.CommandText = sQuery;
+        //    //    try
+        //    //    {
+        //    //        getMessagesReader = command.ExecuteReader();
+        //    //        string sResult = Convert.ToInt32(serverCommands.getMessages).ToString() + ";";
+        //    //        object[] colResult = new object[4];
+        //    //        while(getMessagesReader.Read())
+        //    //        {
+        //    //            getMessagesReader.GetValues(colResult);
+        //    //            foreach(object s in colResult)
+        //    //            {
+        //    //                sResult += s + ";";
+        //    //            }
+        //    //            sResult += "|";
+        //    //        }
+        //    //        getMessagesReader.Close();
 
-            //        return "";
-            //    }
-            //}
-            //return "";
+        //    //        return sResult;
+        //    //    }
+        //    //    catch (Exception ex)
+        //    //    {
 
-        }
+        //    //        return "";
+        //    //    }
+        //    //}
+        //    //return "";
+
+        //}
 
     }
 }

@@ -6,22 +6,14 @@ using System.Threading.Tasks;
 
 namespace httpRequest.JsonClasses
 {
-    class createUserJson
+    public class loginJson
     {
-        private httpServerCommands httpCommand = httpServerCommands.createUser;
+        private httpServerCommands serverCommand = httpServerCommands.loginUser;
 
         public httpServerCommands ServerCommand
         {
-            get { return httpCommand; }
-            set { httpCommand = value; }
-        }
-
-        private createUserData userToCreate;
-
-        public createUserData NewUser
-        {
-            get { return userToCreate; }
-            set { userToCreate = value; }
+            get { return serverCommand; }
+            set { serverCommand = value; }
         }
 
         private string sSession = Form1.sSessionSeed;
@@ -31,6 +23,15 @@ namespace httpRequest.JsonClasses
             get { return sSession; }
             set { sSession = value; }
         }
+
+        private createUserData loginUserData;
+
+        public createUserData UserData
+        {
+            get { return loginUserData; }
+            set { loginUserData = value; }
+        }
+
 
     }
 }

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace httpRequest.JsonClasses
 {
-    public class createUserReturnJson
+    public class actionReturnJson
     {
         private int iReturn;
 
-        public int UserReturn
+        public int Return
         {
             get { return iReturn; }
             set { iReturn = value; }

@@ -59,10 +59,12 @@
     <Compile Include="httpClientHandler.cs" />
     <Compile Include="dbAction.cs" />
     <Compile Include="JsonClasses\createSessionSeed.cs" />
+    <Compile Include="JsonClasses\createUserData.cs" />
     <Compile Include="JsonClasses\createUserJson.cs" />
+    <Compile Include="JsonClasses\loginJson.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="dataBaseHelper.cs" />
+    <Compile Include="dataBaseXmlHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

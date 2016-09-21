@@ -40,8 +40,17 @@ namespace httpRequest
         private async void button1_Click(object sender, EventArgs e)
         {
             //listBox1.Items.Add(DateTime.Now + ":" + DateTime.Now.Millisecond + " Send");
-            
-            
+            JsonClasses.loginJson loginUser = new JsonClasses.loginJson();
+            loginUser.UserData = new JsonClasses.createUserData();
+
+            loginUser.UserData.UserName = tbUser.Text;
+            loginUser.UserData.Password = tbPass.Text;
+            loginUser.UserData.PublicKey = "linchen";
+
+            string s = JsonConvert.SerializeObject(loginUser);
+
+            sendCommand(s, "loginUser");
+
         }
 
         private async void sendCommand(string sJson, string sContentType)
@@ -78,7 +87,16 @@ namespace httpRequest
             dataStream.Write(sendServerCommand, 0, sendServerCommand.Length);
             dataStream.Close();
 
-            int iCreateResult = ((JsonClasses.createUserReturnJson)JsonConvert.DeserializeObject<JsonClasses.createUserReturnJson>(await getResponseString(requ))).UserReturn;
+            switch(sContentType)
+            {
+                case "loginUser":
+                    int iLoginResult = ((JsonClasses.actionReturnJson)JsonConvert.DeserializeObject<JsonClasses.actionReturnJson>(await getResponseString(requ))).Return;
+                    break;
+                case "createUser":
+                    int iCreateResult = ((JsonClasses.actionReturnJson)JsonConvert.DeserializeObject<JsonClasses.actionReturnJson>(await getResponseString(requ))).Return;
+                    break;
+            }
+            
 
         }
 
@@ -89,6 +107,11 @@ namespace httpRequest
             Stream stream = test.GetResponseStream();
             await stream.ReadAsync(bBuffer, 0, bBuffer.Length);
             stream.Close();
+
+            if(Encoding.UTF8.GetString(bBuffer) == "")
+            {
+                return "-1";
+            }
 
             return Encoding.UTF8.GetString(bBuffer);
         }
@@ -101,7 +124,7 @@ namespace httpRequest
         private void btnCreateUser_Click(object sender, EventArgs e)
         {
             JsonClasses.createUserJson createUser = new JsonClasses.createUserJson();
-            createUser.NewUser = new JsonClasses.createUserJson.createUserData();
+            createUser.NewUser = new JsonClasses.createUserData();
 
             createUser.NewUser.UserName = tbUser.Text;
             createUser.NewUser.Password = tbPass.Text;

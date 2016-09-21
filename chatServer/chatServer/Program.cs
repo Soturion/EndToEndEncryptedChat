@@ -93,18 +93,18 @@ namespace chatServer
             {
                 loopedAct = ((dbAction)dbHelper.lSqlCommands[i]);
 
-                if (!loopedAct.Handeled & loopedAct.SqlAction == sqlAction.insert | loopedAct.SqlAction == sqlAction.createUser)
+                if (!loopedAct.Handeled & loopedAct.SqlAction == sqlAction.insert | loopedAct.SqlAction == sqlAction.createUser | loopedAct.SqlAction == sqlAction.loginUser)
                 {
                     dbHelper.executeQueryWithoutReturn(loopedAct);
                     dbHelper.bCleaningQueue = true;
                     dbHelper.lSqlCommands.RemoveAt(i);
                     dbHelper.bCleaningQueue = false;
                 }
-                else if (loopedAct.SqlAction == sqlAction.getMessages)
+                else if (loopedAct.SqlAction == sqlAction.loginUser)
                 {
                     if (loopedAct.ChatUser != null)
                     {
-                        sGetMessagesCommand = dbHelper.executeGetMessages(loopedAct.Command);
+                        //sGetMessagesCommand = dbHelper.executeGetMessages(loopedAct.Command);
                         loopedAct.ChatUser.sendOldMessages(sGetMessagesCommand);
                         dbHelper.bCleaningQueue = true;
                         dbHelper.lSqlCommands.RemoveAt(i);

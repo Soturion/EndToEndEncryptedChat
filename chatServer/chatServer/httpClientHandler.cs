@@ -57,9 +57,17 @@ namespace chatServer
 
                 case httpServerCommands.createUser:
                     JsonClasses.createUserJson newUser = ((JsonClasses.createUserJson)JsonConvert.DeserializeObject<JsonClasses.createUserJson>(smessage));
-                    dbAction test = dbHelper.queueCreateUser(newUser.NewUser.UserName, newUser.NewUser.PublicKey, DateTime.Now);
+                    dbAction test = dbHelper.queueCreateUser(newUser.NewUser.UserName, newUser.NewUser.Password, newUser.NewUser.PublicKey, DateTime.Now);
                     test.HttpContext = context;
                     test.onDbActionFinished += HttpClientHandler_onDbActionFinished;
+                    bWaitForEvent = true;
+                    break;
+
+                case httpServerCommands.loginUser:
+                    JsonClasses.loginJson loginUser = ((JsonClasses.loginJson)JsonConvert.DeserializeObject<JsonClasses.loginJson>(smessage));
+                    dbAction login = dbHelper.queueLoginUser(loginUser.UserData.UserName, loginUser.UserData.Password);
+                    login.onDbActionFinished += HttpClientHandler_onDbActionFinished;
+                    login.HttpContext = context;
                     bWaitForEvent = true;
                     break;
             }
@@ -82,11 +90,17 @@ namespace chatServer
             response = ((dbAction)sender).HttpContext.Response;
             string responseString = "";
 
-            if (((dbAction)sender).SqlAction == sqlAction.createUser)
-            {
-                responseString = @"{'UserReturn': '" + ((dbAction)sender).Status.ToString() + "'}";
-            }            
-            
+            //if (((dbAction)sender).SqlAction == sqlAction.createUser)
+            //{
+            //    responseString = @"{'Return': '" + ((dbAction)sender).Status.ToString() + "'}";
+            //}
+            //else if(((dbAction)sender).SqlAction == sqlAction.loginUser)
+            //{
+            //    //responseString = @"{'Return': '" + ((dbAction)sender).Status.ToString() + "'}";
+            //}
+
+            responseString = @"{'Return': '" + ((dbAction)sender).Status.ToString() + "'}";
+
 
             byte[] buffer = Encoding.UTF8.GetBytes(responseString);
 

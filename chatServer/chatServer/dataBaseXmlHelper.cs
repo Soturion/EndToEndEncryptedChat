@@ -8,7 +8,7 @@ using System.Xml;
 
 namespace chatServer
 {
-    public static class dataBaseHelper
+    public static class dataBaseXmlHelper
     {
         #region Deklarationen
         public static string sDbUser;
