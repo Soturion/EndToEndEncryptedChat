@@ -41,7 +41,7 @@ namespace chatServer
 
         public static NpgsqlConnection connection;
 
-        private static NpgsqlCommand dbConnection;
+        private static NpgsqlCommand dbCommand;
         private static NpgsqlCommand createUserTab;
 
         public static bool bCleaningQueue = false;
@@ -49,12 +49,12 @@ namespace chatServer
 
         private static void prepareTables()
         {
-            dbConnection = new NpgsqlCommand(@"CREATE TABLE chat_tab (uname text, room text, counter SERIAL NOT NULL, message text, PRIMARY KEY(uname, room, counter));", dbHelper.connection);
+            dbCommand = new NpgsqlCommand(@"CREATE TABLE chat_tab (uname text, room text, counter SERIAL NOT NULL, message text, PRIMARY KEY(uname, room, counter));", dbHelper.connection);
             createUserTab = new NpgsqlCommand(@"CREATE TABLE user_tab (uname text, password text, publickey text, credat date, PRIMARY KEY(uname));", dbHelper.connection);
 
             try
             {
-                dbConnection.ExecuteNonQuery();
+                dbCommand.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
@@ -71,139 +71,106 @@ namespace chatServer
             }
         }
 
-        public static void queueInsertMessage(string sUser, string sRoom, string sMessage)
-        {
-            dbAction act = new dbAction();
-            act.Command = @"INSERT INTO chat_tab (uname, room, message) VALUES('[uname]','[room]','[message]');".Replace("[uname]", sUser).Replace("[room]", sRoom).Replace("[message]", sMessage);
-            act.SqlAction = sqlAction.insert;
-            dbHelper.lSqlCommands.Add(act);
-        }
-
         private static List<string> lMessages = new List<string>();
 
-        public static void queueDeleteMessages(string sRoom)
+        public static dbAction queueDbAction(string sUserName, string sPassword, string sPublicKey, DateTime credat)
         {
-            dbAction act = new dbAction();
-            act.Command = @"DELETE FROM chat_tab where room = [room]".Replace("[room]", "'" + sRoom + "'");
-            act.SqlAction = sqlAction.deleteMessages;
-            dbHelper.lSqlCommands.Add(act);
+            return createAction(sqlAction.createUser, @"INSERT INTO user_tab (uname, password, publickey, credat) VALUES('[uname]', '[password]', '[publickey]','[credat]');".Replace("[password]", sPassword).Replace("[uname]", sUserName).Replace("[publickey]", sPublicKey).Replace("[credat]", credat.ToShortDateString()));
         }
 
-        public static dbAction queueCreateUser(string sUserName, string sPassword, string sPublicKey, DateTime credat)
+        public static dbAction queueDbAction(string sUsername, string sPassword)
         {
-            dbAction act = new dbAction();
-            act.Command = @"INSERT INTO user_tab (uname, password, publickey, credat) VALUES('[uname]', '[password]', '[publickey]','[credat]');".Replace("[password]", sPassword).Replace("[uname]", sUserName).Replace("[publickey]", sPublicKey).Replace("[credat]", credat.ToShortDateString());
-            act.SqlAction = sqlAction.createUser;
-            dbHelper.lSqlCommands.Add(act);
-            return act;
+            return createAction(sqlAction.loginUser, @"SELECT * FROM user_tab WHERE uname = '[uname]' AND password = '[password]';".Replace("[uname]", sUsername).Replace("[password]", sPassword));
         }
 
-        public static dbAction queueLoginUser(string sUsername, string sPassword)
+        private static dbAction createAction(sqlAction action, string command, bool queueAction = true)
         {
-            dbAction act = new dbAction();
-            act.Command = @"SELECT * FROM user_tab WHERE uname = '[uname]' AND password = '[password]';".Replace("[uname]", sUsername).Replace("[password]", sPassword);
-            act.SqlAction = sqlAction.loginUser;
-            dbHelper.lSqlCommands.Add(act);
-            return act;
+            dbAction returnAction = new dbAction();
+            returnAction.SqlAction = action;
+            returnAction.Command = command;
+            if (queueAction)
+            {
+
+                dbHelper.lSqlCommands.Add(returnAction);
+            }
+            return returnAction;
         }
+
 
         public static void executeQueryWithoutReturn(dbAction action)
         {
-            if (dbConnection != null & connection != null)
+            if (dbCommand != null & connection != null)
             {
-                dbConnection.CommandText = action.Command;
+                //Everytime a query results in a exception the program gathers exception data and builds up a stacktrace
+                //this causes heavy performanceload, since gathering the performance data 
 
-                try
+                //When a user wants to login or create a new user, we check if there is an existing user already
+                if (action.SqlAction == sqlAction.loginUser)
                 {
-                    string result = dbConnection.ExecuteScalar().ToString();
-                    if (result != "")
+
+                    NpgsqlDataReader read = dbCommand.ExecuteReader();
+                    read.Close();
+
+                    if (read.HasRows)
                     {
                         action.Status = 4;
                     }
+                    else
+                    {
+                        action.Status = -4;
+                    }
 
                     action.Handeled = true;
-
+                    return;
                 }
-                catch (Exception ex)
+
+                if (action.SqlAction == sqlAction.createUser)
                 {
-                    action.Status = -5;
-                    action.Handeled = true;
-                    Console.WriteLine("++ Query queue error: " + ex.Message);
+
+                    dbAction checkExistance = createAction(sqlAction.loginUser, @"SELECT * FROM user_tab WHERE uname = '[uname]';".Replace("[uname]", action.ChatUser.NewUser.UserName), false);
+                    dbCommand.CommandText = checkExistance.Command;
+
+                    NpgsqlDataReader read = dbCommand.ExecuteReader();
+                    read.Close();
+
+                    if (read.HasRows)
+                    {
+                        action.Status = -3;
+                        action.Handeled = true;
+                        return;
+                    }
+                    else
+                    {
+                        dbAction createUser = createAction(sqlAction.createUser, @"INSERT INTO user_tab (uname, password, publickey, credat) VALUES('[uname]', '[password]', '[publickey]','[credat]');".Replace("[password]", action.ChatUser.NewUser.Password).Replace("[uname]", action.ChatUser.NewUser.UserName).Replace("[publickey]", action.ChatUser.NewUser.PublicKey).Replace("[credat]", DateTime.Now.ToShortDateString()), false);
+                        dbCommand.CommandText = createUser.Command;
+                        try
+                        {
+                            int iResult = dbCommand.ExecuteNonQuery();
+
+                            if (iResult == 1)
+                            {
+                                action.Status = 3;
+                            }
+                            else
+                            {
+                                action.Status = -3;
+                            }
+
+                            action.Handeled = true;
+                            return;
+
+                        }
+                        catch (Exception ex)
+                        {
+                            action.Status = -5;
+                            action.Handeled = true;
+                            Console.WriteLine("++ Query queue error: " + ex.Message);
+                            return;
+                        }
+                    }
                 }
-
             }
-
-            action.Status = -3;
         }
-
-        //public static void executeQueryWithReturn(dbAction action)
-        //{
-        //    if (dbConnection != null & connection != null)
-        //    {
-        //        dbConnection.CommandText = action.Command;
-
-        //        try
-        //        {
-        //            int result = dbConnection.ExecuteNonQuery();
-        //            if (result > 0)
-        //            {
-        //                action.Status = result;
-        //            }
-
-        //            action.Handeled = true;
-
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            action.Status = -1;
-        //            action.Handeled = true;
-        //            Console.WriteLine("++ Query queue error: " + ex.Message);
-        //        }
-
-        //    }
-
-        //    action.Status = -3;
-        //}
-
-        private static void Action_onDbActionFinished(object sender, dbActionArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private static NpgsqlDataReader getMessagesReader;
-        //public static string executeGetMessages(string sQuery)
-        //{
-        //    return "";
-        //    //if(command != null & connection != null)
-        //    //{
-        //    //    command.CommandText = sQuery;
-        //    //    try
-        //    //    {
-        //    //        getMessagesReader = command.ExecuteReader();
-        //    //        string sResult = Convert.ToInt32(serverCommands.getMessages).ToString() + ";";
-        //    //        object[] colResult = new object[4];
-        //    //        while(getMessagesReader.Read())
-        //    //        {
-        //    //            getMessagesReader.GetValues(colResult);
-        //    //            foreach(object s in colResult)
-        //    //            {
-        //    //                sResult += s + ";";
-        //    //            }
-        //    //            sResult += "|";
-        //    //        }
-        //    //        getMessagesReader.Close();
-
-        //    //        return sResult;
-        //    //    }
-        //    //    catch (Exception ex)
-        //    //    {
-
-        //    //        return "";
-        //    //    }
-        //    //}
-        //    //return "";
-
-        //}
 
     }
 }

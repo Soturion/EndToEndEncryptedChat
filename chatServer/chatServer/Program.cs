@@ -100,17 +100,17 @@ namespace chatServer
                     dbHelper.lSqlCommands.RemoveAt(i);
                     dbHelper.bCleaningQueue = false;
                 }
-                else if (loopedAct.SqlAction == sqlAction.loginUser)
-                {
-                    if (loopedAct.ChatUser != null)
-                    {
-                        //sGetMessagesCommand = dbHelper.executeGetMessages(loopedAct.Command);
-                        loopedAct.ChatUser.sendOldMessages(sGetMessagesCommand);
-                        dbHelper.bCleaningQueue = true;
-                        dbHelper.lSqlCommands.RemoveAt(i);
-                        dbHelper.bCleaningQueue = false;
-                    }
-                }
+                //else if (loopedAct.SqlAction == sqlAction.loginUser)
+                //{
+                //    if (loopedAct.ChatUser != null)
+                //    {
+                //        //sGetMessagesCommand = dbHelper.executeGetMessages(loopedAct.Command);
+                //        loopedAct.ChatUser.sendOldMessages(sGetMessagesCommand);
+                //        dbHelper.bCleaningQueue = true;
+                //        dbHelper.lSqlCommands.RemoveAt(i);
+                //        dbHelper.bCleaningQueue = false;
+                //    }
+                //}
             }
 
         }

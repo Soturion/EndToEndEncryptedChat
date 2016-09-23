@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace chatServer.JsonClasses
 {
-    class createUserJson
+    public class createUserJson
     {
         private httpServerCommands httpCommand = httpServerCommands.createUser;
 

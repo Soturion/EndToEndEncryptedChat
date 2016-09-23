@@ -16,7 +16,7 @@ namespace chatServer
 
         private string sCommand;
 
-        private chatUser cUser;
+        private JsonClasses.createUserJson cUser;
 
         private int iStatus;
 
@@ -34,7 +34,7 @@ namespace chatServer
             set { iStatus = value; }
         }
 
-        public chatUser ChatUser
+        public JsonClasses.createUserJson ChatUser
         {
             get { return cUser; }
             set { cUser = value; }
