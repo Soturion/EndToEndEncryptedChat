@@ -22,6 +22,15 @@ namespace chatServer
 
         private System.Net.HttpListenerContext context;
 
+        private string sessionSeed;
+
+        public string SessionSeed
+        {
+            get { return sessionSeed; }
+            set { sessionSeed = value; }
+        }
+
+
         public System.Net.HttpListenerContext HttpContext
         {
             get { return context; }

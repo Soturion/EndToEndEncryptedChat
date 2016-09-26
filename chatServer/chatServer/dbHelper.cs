@@ -113,11 +113,11 @@ namespace chatServer
 
                     if (read.HasRows)
                     {
-                        action.Status = 4;
+                        action.Status = Convert.ToInt32(sqlAction.loginUser);
                     }
                     else
                     {
-                        action.Status = -4;
+                        action.Status = -1 * Convert.ToInt32(sqlAction.loginUser);
                     }
 
                     action.Handeled = true;
@@ -135,7 +135,7 @@ namespace chatServer
 
                     if (read.HasRows)
                     {
-                        action.Status = -3;
+                        action.Status = -1 * Convert.ToInt32(sqlAction.createUser);
                         action.Handeled = true;
                         return;
                     }
@@ -149,11 +149,11 @@ namespace chatServer
 
                             if (iResult == 1)
                             {
-                                action.Status = 3;
+                                action.Status = Convert.ToInt32(sqlAction.createUser);
                             }
                             else
                             {
-                                action.Status = -3;
+                                action.Status = -1 * Convert.ToInt32(sqlAction.createUser);
                             }
 
                             action.Handeled = true;

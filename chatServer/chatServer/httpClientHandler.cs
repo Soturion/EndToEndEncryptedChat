@@ -31,12 +31,10 @@ namespace chatServer
 
         HttpListenerResponse response;
         string smessage;
-        string sClassToCreate;
-        bool bWaitForEvent = false;
+        string sSession = "";
 
         private async Task HandleRequestAsync(HttpListenerContext context)
         {
-            bWaitForEvent = false;
             byte[] bInput = new byte[context.Request.ContentLength64];
             context.Request.InputStream.Read(bInput, 0, bInput.Length);
             smessage = Encoding.UTF8.GetString(bInput, 0, bInput.Length);
@@ -52,7 +50,18 @@ namespace chatServer
             switch (((httpServerCommands)Convert.ToInt32(clientMessage.ServerCommand)))
             {
                 case httpServerCommands.generateSessionSeed:
-                    responseString = @"{'SessionSeed': '" + Guid.NewGuid().ToString() + "'}";
+                    sSession = Guid.NewGuid().ToString();
+                    responseString = @"{'SessionSeed': '" + sSession + "'}";
+
+                    response = context.Response;
+
+                    byte[] buffer = Encoding.UTF8.GetBytes(responseString);
+
+                    response.ContentLength64 = buffer.Length;
+                    Stream output = response.OutputStream;
+                    output.Write(buffer, 0, buffer.Length);
+
+                    output.Close();
                     break;
 
                 case httpServerCommands.createUser:
@@ -62,7 +71,6 @@ namespace chatServer
                     test.ChatUser = newUser;
                     test.HttpContext = context;
                     test.onDbActionFinished += HttpClientHandler_onDbActionFinished;
-                    bWaitForEvent = true;
                     break;
 
                 case httpServerCommands.loginUser:
@@ -70,21 +78,9 @@ namespace chatServer
                     dbAction login = dbHelper.queueDbAction(loginUser.UserData.UserName, loginUser.UserData.Password);
                     login.onDbActionFinished += HttpClientHandler_onDbActionFinished;
                     login.HttpContext = context;
-                    bWaitForEvent = true;
                     break;
             }
 
-            if(bWaitForEvent) { return; }
-
-            response = context.Response;
-            
-            byte[] buffer = Encoding.UTF8.GetBytes(responseString);
-
-            response.ContentLength64 = buffer.Length;
-            Stream output = response.OutputStream;
-            output.Write(buffer, 0, buffer.Length);
-
-            output.Close();
         }
 
         private void HttpClientHandler_onDbActionFinished(object sender, dbActionArgs e)
@@ -102,6 +98,11 @@ namespace chatServer
             output.Write(buffer, 0, buffer.Length);
 
             output.Close();
+
+            if (((dbAction)sender).SqlAction == sqlAction.loginUser & ((dbAction)sender).Status == Convert.ToInt32(sqlAction.loginUser))
+            {
+
+            }
             
         }
 
